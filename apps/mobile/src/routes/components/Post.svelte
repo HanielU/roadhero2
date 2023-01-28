@@ -23,7 +23,8 @@
   dayjs.extend(relativeTime);
 
   export let reportId: string;
-  let liked = false;
+  let likers = [];
+  $: liked = likers.includes($currentUser?.model.id);
   let commenting = false;
   let comment = "";
   let avatar: string;
@@ -69,6 +70,11 @@
     report = (await trpc.reports.getOne.query({
       id: reportId,
     })) as unknown as Record;
+
+    await pb.collection("users").authWithPassword($currentUser?.email!, $currentUser?.password!);
+    const ret = await pb.collection("reports").getOne(reportId);
+    console.log(ret.upvotes);
+    likers = ret.upvotes.value;
 
     // pb.collection("reports").getOne(reportId, { expand: "user, comments" });
 
@@ -155,10 +161,19 @@
     <div
       class={clsx(liked && "text-secondaryGreen")}
       on:click={async () => {
-        let userId = report.expand?.user?.username;
-        console.log("userId", userId);
+        if (likers?.includes($currentUser?.model.id)) {
+          likers = likers?.filter(id => id != $currentUser?.model.id);
+        } else {
+          likers.push($currentUser?.model.id);
+        }
 
-        liked = !liked;
+        await pb.collection("reports").update(reportId, {
+          upvotes: { value: likers },
+        });
+
+        const ret = await pb.collection("reports").getOne(reportId);
+        console.log(ret.upvotes);
+        likers = ret.upvotes.value;
         // const record = await pb.collection("reports").update(reportId, {
         //   upvotes: { userId: liked },
         // });

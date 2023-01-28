@@ -39,9 +39,14 @@ export default router({
       console.log(ctx.pb.authStore.isValid);
 
       const loc = await ctx.pb.collection("locations").create({ coords, reporter: input.user.id });
-      return await ctx.pb
-        .collection("reports")
-        .create({ ...rep, location: loc.id, user: input.user.id });
+      return await ctx.pb.collection("reports").create({
+        ...rep,
+        location: loc.id,
+        user: input.user.id,
+        upvotes: {
+          value: [],
+        },
+      });
     }),
 
   locations: publicProcedure.query(async ({ ctx }) => {
