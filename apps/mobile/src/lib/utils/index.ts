@@ -11,4 +11,4 @@ export function isCollide(a: Element, b: Element) {
   );
 }
 
-export const base_url = "http://192.168.0.225:5000";
+export const base_url = "http://192.168.0.107:5000";

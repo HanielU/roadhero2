@@ -1,7 +1,7 @@
-import comments from "./routes/comments";
-import reports from "./routes/reports";
-import user from "./routes/user";
-import { router } from "./trpc";
+import comments from "./routes/comments.js";
+import reports from "./routes/reports.js";
+import user from "./routes/user.js";
+import { router } from "./trpc.js";
 
 export const appRouter = router({
   user,

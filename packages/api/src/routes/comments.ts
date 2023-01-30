@@ -1,4 +1,4 @@
-import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../trpc.js";
 import { array, number, object, string } from "zod";
 
 export default router({

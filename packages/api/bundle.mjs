@@ -1,5 +1,5 @@
 import * as esbuild from "esbuild";
-import t from "./package.json" assert { type: "json" };
+// import t from "./package.json" assert { type: "json" };
 import { readdir } from "fs/promises";
 import { resolve } from "path";
 
@@ -15,21 +15,26 @@ async function* getFiles(dir) {
   }
 }
 
-const main = async () => {
+(async () => {
   const stack = [];
   for await (const f of getFiles("src")) {
     stack.push(f);
   }
 
   await esbuild.build({
-    entryPoints: stack.filter(f => !f.endsWith("types.ts") && f.endsWith(".ts")),
-    bundle: true,
+    entryPoints: stack.filter(
+      f =>
+        !f.endsWith("types.ts") &&
+        !f.endsWith("handler.ts") &&
+        (f.endsWith(".ts") || f.endsWith(".mts"))
+    ),
     platform: "node",
-    target: "node14",
+    target: "node16",
     outdir: "dist",
     tsconfig: "./tsconfig.json",
-    external: Object.keys(t.dependencies).concat(Object.keys(t.devDependencies)),
+    // format: "cjs",
+    bundle: false,
+    // outExtension: { ".js": ".mjs" },
+    // external: Object.keys(t.dependencies).concat(Object.keys(t.devDependencies)),
   });
-};
-
-main();
+})();

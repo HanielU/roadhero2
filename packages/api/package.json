@@ -1,8 +1,9 @@
 {
   "name": "@packages/api",
   "version": "0.0.0",
-  "main": "src/router",
+  "main": "src/router.ts",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "dev": "tsnd --respawn --transpile-only src/main.ts",
     "build": "rm -rf dist && node bundle.mjs",
